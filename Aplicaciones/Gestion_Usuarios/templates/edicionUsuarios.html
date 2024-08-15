@@ -1,0 +1,39 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+
+{% block title %} Gestión de Cursos {% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-4 offset-md-4">
+        <h2>Edición de Curso</h2>
+        <div class="card">
+            <div class="card-body">
+                <form action="/editarUsuario/" method="POST">{% csrf_token %}
+                    <div class="form-group">
+                        <input type="text" id="txtTelefono" name="txtTelefono" value="{{usuario.telefono}}" class="form-control" placeholder="Código"
+                            minlength="6" maxlength="6" readonly required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="txNombreC" name="txNombreC" value="{{usuario.nombreC}}" class="form-control" placeholder="Nombre"
+                            maxlength="50" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="txtNombreR" name="txtNombreR" value="{{usuario.nombreR}}" class="form-control" placeholder="Nombre"
+                            maxlength="50" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="numHoras" name="numHoras" value="{{usuario.tiempoH}}" class="form-control" min="1" max="9"
+                            value="1" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success btn-block text-white">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+</div>
+{% endblock %}
