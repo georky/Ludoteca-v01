@@ -73,7 +73,8 @@ def registrarUsuarios(request):
 
 def edicionUsuario(request, telefono):
     usuario = Clientes.objects.get(telefono=telefono)
-    return render(request, "edicionUsuarios.html", {"usuario": usuario})
+    print(telefono)
+    return render(request, "gestionUsuarios.html", {"usuario": usuario})
 
 def editarUsuario(request):
     if request.method == 'POST':
@@ -136,13 +137,13 @@ def enviarNotifi(request,telefono, nombreC, mensaje):
 
     headers = {
         "Content-Type" : "application/json",
-        "Authorization" : "Bearer EAAOyRshDbC8BOz2bvkJI922HNuXYGgEUtknT4Ajhog5AUAIHg1XzWZCp1ywehhKTPE1mW1upmF8cW0G7Oc8iuza0VPimg7ZCkZBRatCAQakFnscP99o2vH3BPDZCACZAhNIIsblajrlDXszb8jsXilmM25yupCCbZB6rjapXZClvYePtveFPdqI15LTf0ZCFSSU6"
+        "Authorization" : "Bearer EAAOttkFM0QUBO0ggpCuImEjTDEZCED138rJbdUZBkJXcsobMbytbvU8B5PwpUMlVdmlD5d2ZB7SSQxskCCrVDCUVwyYgwA1AnUc4KkDB43WATGRAw6I4ZAqAm989rlFTNZAouLRKxiHpZCXt0QPCjUa5QsSHOgayyMVZCLs5V5BsSa3SMZAzvvZAQnttU1uT8jddu1QZDZD"
     }
 
     connection = http.client.HTTPSConnection("graph.facebook.com")
 
     try:
-        connection.request("POST","/v19.0/346378921896150/messages", data, headers)
+        connection.request("POST","/v20.0/380727461797238/messages", data, headers)
         response = connection.getresponse()
         print(response.status, response.reason)
         messages.success(request, '¡Mensaje Enviado!')

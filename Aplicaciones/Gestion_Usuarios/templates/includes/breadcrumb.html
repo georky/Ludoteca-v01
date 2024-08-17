@@ -117,7 +117,7 @@
                             <p class="m-0">{{ c.campo5}}</p>
                             {% endif %}
                         <td>
-                          <a href="edicionUsuario/{{c.telefono}}" class="label theme-bg2 text-white f-12">Editar</a>
+                          <a href="edicionUsuario/{{c.telefono}}" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="label theme-bg2 text-white f-12">Editar</a>
                           <a href="{% url 'eliminarUsuarios' telefono=c.telefono %}" class="label theme-bg text-white f-12">Eliminar</a>
                           <a href="{% url 'enviarNotifi' telefono=c.telefono nombreC=c.nombreC mensaje=c.mensaje%}"class="label text-c-purple f-12">Mensaje</a>
                         </td>
@@ -144,7 +144,7 @@
                     <form action="/registrarUsuarios/" method="POST">{% csrf_token %}
                         <div class="form-group">
                             <input type="text" id="txtTelefono" name="txtTelefono" class="form-control" placeholder="Telefono"
-                              minlength="9" maxlength="9"required>
+                              minlength="9" maxlength="9"required value="">
                         </div>
                         <div class="form-group">
                             <input type="text" id="txmensaje" name="txmensaje" class="form-control" placeholder="Mensaje"
@@ -180,7 +180,65 @@
         {% endfor %}
         {% endif %}
     </div>
-    
+
+    <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+  Lanzar demo de modal
+</button>
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">Título del modal</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form action="/editarUsuario/" method="POST">{% csrf_token %}
+              <div class="form-group">
+                <input type="text" id="txtTelefono" name="txtTelefono" value="{{usuario.telefono}}" class="form-control" placeholder="Telefono"
+                    minlength="6" maxlength="6" required>
+              </div>
+              <div class="form-group">
+                  <input type="text" id="txmensaje" name="txmensaje" class="form-control" placeholder="Mensaje"
+                      required>
+              </div>
+              <div class="form-group">
+                  <input type="text" id="txNombreC" name="txNombreC" class="form-control" placeholder="Nombre Cliente"
+                      required>
+              </div>
+              <div class="form-group">
+                  <input type="text" id="txtNombreR" name="txtNombreR" class="form-control" placeholder="Nombre Reprentante"
+                      maxlength="50" required>
+              </div>
+              <div class="form-group">
+                  <input type="text" id="numHoras" name="numHoras" class="form-control" min="1" max="12"
+                      value="1" required>
+              </div>
+              <div class="form-group">
+                  <button type="submit" class="btn btn-success btn-block text-white">Guardar</button>
+              </div>
+          </form>
+      </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-primary">Comprendido</button>
+          </div>
+        </div>
+      </div>
+    </div>
 </div>
+<!-- Scripts de Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
+<script>
+  var myModal = document.getElementById('myModal')
+  var myInput = document.getElementById('myInput')
+
+  myModal.addEventListener('shown.bs.modal', function () {
+  myInput.focus()
+})
+</script>
 {% endblock %}
 
