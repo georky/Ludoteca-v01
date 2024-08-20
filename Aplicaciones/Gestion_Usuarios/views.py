@@ -20,11 +20,18 @@ TOKEN_ANDERCODE = "ANDERCODE"
 def index(request, mensaje=None):
     # Plantilla de logeo para los usuarios 
     return render(request, 'login.html', {'error': mensaje})
-
+@login_required
 def inicio(request):
+
+ try:
     # Plantilla de la primera página al entrar al sistema
     usuariosListados = Clientes.objects.all().order_by('-campo6')
     return render(request, "gestionUsuarios.html", {"usuarios": usuariosListados})
+ except Exception as e:
+    return render(request, '404.html')
+
+def PerfilQR(request):
+    return render(request, "perfilQR.html")
 
 
 def validarUsuario(request):
@@ -46,7 +53,10 @@ def validarUsuario(request):
 def signout(request):
     # Función para cerrar sesión
     logout(request)
-    return redirect('inicio')
+    return redirect('index')
+
+def custom_404(request, exception=None):
+    return render(request, '404.html', status=404)
 
 def registrarUsuarios(request):
     if request.method == 'POST':
@@ -122,16 +132,31 @@ def verificar_token(req):
 
 def enviarNotifi(request,telefono, nombreC, mensaje):
 
-    data={
-            "messaging_product": "whatsapp",
-            "recipient_type": "individual",
-            "to": '593'+telefono,
-            "type": "text",
-            "text": {
-                "preview_url": False,
-                "body": mensaje
+    data = {
+    "messaging_product": "whatsapp",
+    "to": '593' + telefono,  # Asegúrate de que 'telefono' sea un string sin espacios
+    "type": "template",
+    "template": {
+        "name": "ludoteca_fin",
+        "language": {
+            "code": "es_MX"
+        },
+        "components": [
+            {
+                "type": "header",
+                "parameters": [
+                    {
+                        "type": "image",
+                        "image": {
+                            "link": "https://www.bing.com/images/blob?bcid=spLzlTMnX2cHEw"  # Reemplaza con la URL de tu imagen
+                        }
+                    }
+                ]
             }
+        ]
     }
+}
+
   #Convertir el diccionaria a formato JSON
     data=json.dumps(data)
 
@@ -143,14 +168,26 @@ def enviarNotifi(request,telefono, nombreC, mensaje):
     connection = http.client.HTTPSConnection("graph.facebook.com")
 
     try:
+
+
         connection.request("POST","/v20.0/380727461797238/messages", data, headers)
         response = connection.getresponse()
+        
+
         print(response.status, response.reason)
-        messages.success(request, '¡Mensaje Enviado!')
-        estado = 'ENVIADO'
-        clientes = Clientes.objects.get(telefono=telefono)
-        clientes.campo3 = estado
-        clientes.save()
+        
+        if response.status == 200:
+            print("Mensaje enviado exitosamente")
+            messages.success(request, '¡Mensaje Enviado!')
+            estado = 'ENVIADO'
+            clientes = Clientes.objects.get(telefono=telefono)
+            clientes.campo3 = estado
+            clientes.save()
+        else:
+            print("Error al enviar el mensaje")
+           # print(response.status_code, response.text)
+
+        
         return redirect('inicio')
     except Exception as e:
         print(json.dumps(e))
