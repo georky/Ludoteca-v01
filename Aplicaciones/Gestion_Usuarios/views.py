@@ -1,12 +1,14 @@
 import http
 import http.client
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 import pytz
 from datetime import datetime, timedelta
+
+from responses import POST
 from .models import Clientes
 import requests
 import json
@@ -54,9 +56,6 @@ def signout(request):
     # Función para cerrar sesión
     logout(request)
     return redirect('index')
-
-def custom_404(request, exception=None):
-    return render(request, '404.html', status=404)
 
 def registrarUsuarios(request):
     if request.method == 'POST':
@@ -148,7 +147,7 @@ def enviarNotifi(request,telefono, nombreC, mensaje):
                     {
                         "type": "image",
                         "image": {
-                            "link": "https://www.bing.com/images/blob?bcid=spLzlTMnX2cHEw"  # Reemplaza con la URL de tu imagen
+                            "link": "https://scontent.floh3-1.fna.fbcdn.net/v/t39.30808-6/442406977_122112678596299689_5442527160285804601_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=127cfc&_nc_ohc=DqXxHRA6aKAQ7kNvgGRb2Y4&_nc_ht=scontent.floh3-1.fna&oh=00_AYDfKFLYBx1mKlXjL6BPGJTEDxa8Orc7hJQnbXAfoQoOcA&oe=66C9CB78"  # Reemplaza con la URL de tu imagen
                         }
                     }
                 ]
