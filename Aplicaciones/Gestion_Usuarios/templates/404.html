@@ -1,14 +1,63 @@
-<!-- 404.html -->
+
 <!DOCTYPE html>
-<html lang="es">
+
+<html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página no encontrada</title>
+  <title>Datta Able - Error 404</title>
+  <!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 10]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <!-- Meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="description" content=""/>
+  <meta name="keywords" content=""/>
+  <meta name="author" content="CodedThemes" />
+
+  <!-- Favicon icon -->
+  <link rel="icon" href="/static/assets/images/favicon.ico" type="image/x-icon">
+  <!-- fontawesome icon -->
+  <link rel="stylesheet" href="/static/assets/fonts/fontawesome/css/fontawesome-all.min.css">
+  <!-- animation css -->
+  <link rel="stylesheet" href="/static/assets/css/plugins/animate.min.css">
+  <!-- vendor css -->
+  <link rel="stylesheet" href="/static/assets/css/style.css">
+  
+
 </head>
-<body>
-    <h1>404 - Página no encontrada</h1>
-    <p>Lo sentimos, la página que estás buscando no existesss.</p>
-    <a href="{% url 'inicio' %}">Volver al inicio</a>
+
+  
+
+<div class="auth-wrapper">
+    <div class="auth-content">
+        <div class="auth-bg">
+            <span class="r"></span>
+            <span class="r s"></span>
+            <span class="r s"></span>
+            <span class="r"></span>
+        </div>
+        <div class="card text-center px-2 py-3">
+            <h2 class="mb-3">Error 404</h2>
+            <h4 class="mb-3">Página no encontrada</h4>
+            <p class="mb-3">Le sugerimos que vaya a la página de inicio mientras resolvemos este problema..</p>
+            <div>
+                <a href="{% url 'inicio' %}" class="btn btn-primary">Inicio</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+  <script src="/static/assets/js/plugins/popper.min.js"></script>
+  <script src="/static/assets/js/plugins/bootstrap.min.js"></script>
+  
 </body>
+
 </html>

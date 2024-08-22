@@ -7,14 +7,18 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 import pytz
 from datetime import datetime, timedelta
-
+from django.core.paginator import Paginator
 from responses import POST
 from .models import Clientes
 import requests
+from django.http import JsonResponse
 import json
 import request2
 import jsonify
 from django.db.models import Count
+from .forms import ClienteForm
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
 # Token de verificacion para la configuracion
 TOKEN_ANDERCODE = "ANDERCODE"
 
@@ -29,13 +33,33 @@ def inicio(request):
     # Plantilla de la primera página al entrar al sistema
     usuariosListados = Clientes.objects.all().order_by('-campo6')
     return render(request, "gestionUsuarios.html", {"usuarios": usuariosListados})
+ 
  except Exception as e:
     return render(request, '404.html')
 
 def PerfilQR(request):
     return render(request, "perfilQR.html")
 
+def listado_usuarios(request):
+    # Obtén el término de búsqueda y la página actual de los parámetros de la solicitud
+    search_term = request.GET.get('search', '')
+    page_number = int(request.GET.get('page', 1))
 
+    # Filtra los usuarios según el término de búsqueda
+    #usuarios = Clientes.objects.filter(nombreC__icontains=search_term)  # Puedes ajustar el filtro según tus necesidades
+    usuarios = Clientes.objects.all().order_by('-campo6')
+    # Configura la paginación
+    paginator = Paginator(usuarios, 5)  # 5 usuarios por página
+    page_obj = paginator.get_page(page_number)
+
+    # Convierte los usuarios en un formato JSON
+    data = {
+        'clientes': list(page_obj.object_list.values('nombreC', 'telefono', 'tiempoH', 'campo6', 'campo3', 'campo5')),
+        'num_pages': paginator.num_pages,
+        'current_page': page_number
+    }
+
+    return JsonResponse(data)
 def validarUsuario(request):
     # Función para validar los usuarios al momento de logearse 
     if request.method == 'POST':
@@ -82,25 +106,48 @@ def registrarUsuarios(request):
 
 def edicionUsuario(request, telefono):
     usuario = Clientes.objects.get(telefono=telefono)
-    print(telefono)
-    return render(request, "gestionUsuarios.html", {"usuario": usuario})
+    print('ffff')
+    return render(request, "edicionUsuarios.html", {"usuario": usuario})
 
-def editarUsuario(request):
+def edit_cliente(request, pk):
+    cliente = get_object_or_404(Clientes, pk=pk)
+    form = ClienteForm(instance=cliente)
+    if request.is_ajax():
+        return render(request, 'edit_cliente_modal.html', {'form': form})
     if request.method == 'POST':
-        telefono = request.POST['txtTelefono']
-        nombreC = request.POST['txNombreC']
-        nombreR = request.POST['txtNombreR']
-        tiempoH = request.POST['numHoras']
-        
-        usuario = Clientes.objects.get(telefono=telefono)
-        usuario.nombreC = nombreC
-        usuario.nombreR = nombreR
-        usuario.tiempoH = tiempoH
-        usuario.save()
-        
-        messages.success(request, '¡Usuario actualizado!')
-        return redirect('inicio')
-    return render(request, 'edicionUsuarios.html')
+        form = ClienteForm(request.POST, instance=cliente)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'errors': form.errors}, status=400)
+    return render(request, 'edit_cliente_modal.html', {'form': form})
+
+def obtener_clientess(request, telefono):
+    cliente = Clientes.objects.get(telefono=telefono)
+    data = {
+        'telefono': cliente.telefono,
+        'nombreC': cliente.nombreC,
+        'nombreR': cliente.nombreR,
+        'campo3': cliente.campo3,
+    }
+    return JsonResponse(data)    
+
+@csrf_exempt
+@require_POST
+def editarUsuario(request):
+    
+    telefono = request.POST.get('telefono')
+    nombreC = request.POST.get('nombreC')
+    nombreR = request.POST.get('nombreR')
+    campo3 = request.POST.get('campo3')
+    cliente = Clientes.objects.get(telefono=telefono)
+    cliente.nombreC = nombreC
+    cliente.nombreR = nombreR
+    cliente.campo3 = campo3
+    cliente.save()
+    return redirect('inicio')
+       
 
 def eliminarUsuarios(request, telefono):
   if request.method == 'GET':
