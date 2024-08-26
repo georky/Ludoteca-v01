@@ -186,7 +186,7 @@ def enviarNotifi(request,telefono, nombreC, mensaje):
                     {
                         "type": "image",
                         "image": {
-                            "link": "https://scontent.floh3-1.fna.fbcdn.net/v/t39.30808-6/442406977_122112678596299689_5442527160285804601_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=127cfc&_nc_ohc=DqXxHRA6aKAQ7kNvgGRb2Y4&_nc_ht=scontent.floh3-1.fna&oh=00_AYDfKFLYBx1mKlXjL6BPGJTEDxa8Orc7hJQnbXAfoQoOcA&oe=66C9CB78"  # Reemplaza con la URL de tu imagen
+                            "link": "https://i.postimg.cc/DZf9DMgn/ludoteca.png"  # Reemplaza con la URL de tu imagen
                         }
                     }
                 ]
