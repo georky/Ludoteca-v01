@@ -28,14 +28,25 @@ def index(request, mensaje=None):
     return render(request, 'login.html', {'error': mensaje})
 @login_required
 def inicio(request):
-
- try:
-    # Plantilla de la primera página al entrar al sistema
-    usuariosListados = Clientes.objects.all().order_by('-campo6')
-    return render(request, "gestionUsuarios.html", {"usuarios": usuariosListados})
- 
- except Exception as e:
-    return render(request, '404.html')
+    # Obtén el total de usuarios en la base de datos
+    total_enviados = Clientes.objects.count()
+    usuariosListados = Clientes.objects.all()
+    # Aquí puedes aplicar cualquier filtro si es necesario
+    # Por ejemplo, si tienes un filtro específico, aplícalo aquí:
+    filtered_users_pend = Clientes.objects.filter(campo3='PENDIENTE').count()
+    filtered_users_envia = Clientes.objects.filter(campo3='ENVIADO').count()
+    #filtered_pend = filtered_users
+    
+    # Si no tienes filtro, puedes igualar `filtered_count` a `total_users`
+    #filtered_count = total_users
+    
+    context = {
+        'total_env': total_enviados,          # Total de usuarios en la base de datos
+        'filtered_count_env': filtered_users_envia,     # Total de usuarios (esto es redundante)
+        'filtered_count_pen': filtered_users_pend,
+        'usuarios': usuariosListados  # Total de usuarios después de aplicar filtro (aquí iguala al total si no hay filtro)
+    }
+    return render(request, "gestionUsuarios.html", context)
 
 def PerfilQR(request):
     return render(request, "perfilQR.html")
@@ -70,11 +81,11 @@ def validarUsuario(request):
         if user is not None:
             login(request, user)  # Log in the user
             usuariosListados = Clientes.objects.all()
-            return render(request, "gestionUsuarios.html", {"usuarios": usuariosListados})
+            return redirect('inicio')
             #return render(request, "gestionUsuarios.html", {"usuarios": "erfecto."})
         else:
             return render(request, 'login.html', {'error': "Algó salió mal en la autenticación. Verifique su usuario y contraseña."})
-    return render(request, 'login.html')
+    return render(request, 'index')
 
 def signout(request):
     # Función para cerrar sesión
@@ -103,25 +114,6 @@ def registrarUsuarios(request):
         messages.success(request, 'Niñ@ registrado!')
         return redirect('inicio')
     return render(request, 'registrarUsuarios.html')  # Render form for GET requests
-
-def edicionUsuario(request, telefono):
-    usuario = Clientes.objects.get(telefono=telefono)
-    print('ffff')
-    return render(request, "edicionUsuarios.html", {"usuario": usuario})
-
-def edit_cliente(request, pk):
-    cliente = get_object_or_404(Clientes, pk=pk)
-    form = ClienteForm(instance=cliente)
-    if request.is_ajax():
-        return render(request, 'edit_cliente_modal.html', {'form': form})
-    if request.method == 'POST':
-        form = ClienteForm(request.POST, instance=cliente)
-        if form.is_valid():
-            form.save()
-            return JsonResponse({'success': True})
-        else:
-            return JsonResponse({'errors': form.errors}, status=400)
-    return render(request, 'edit_cliente_modal.html', {'form': form})
 
 def obtener_clientess(request, telefono):
     cliente = Clientes.objects.get(telefono=telefono)
@@ -153,7 +145,7 @@ def eliminarUsuarios(request, telefono):
   if request.method == 'GET':
      clientes = Clientes.objects.get(telefono=telefono)
      clientes.delete()
-     messages.success(request, '¡Usuario eliminado!')
+     messages.success(request, 'Niñ@ eliminado!')
      return redirect('inicio')
   return render(request, 'gestionUsuarios.html')  # Render form for GET requests
 
@@ -250,3 +242,11 @@ def recibir_mensajes(request):
         return HttpResponse(json.dumps({'message': 'EVENT_RECEIVED'}), content_type='application/json')
     except json.JSONDecodeError:
         return HttpResponse(json.dumps({'message': 'Error en el formato de los datos'}), status=400, content_type='application/json')
+
+def Nuser_list(request):
+    total_clients = Clientes.objects.count()  # Obtiene todos los usuarios
+    context = {
+        'total_clients': total_clients
+    }
+    #return render(request, "includes/breadcrumb.html.html", context)
+    return render(request, "gestionUsuarios.html", {"total_clients": context})
