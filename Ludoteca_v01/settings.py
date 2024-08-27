@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'Ludoteca_v01.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'Ludoteca.db',
+        'NAME': 'Ludoteca.db',
     }
 }
 
