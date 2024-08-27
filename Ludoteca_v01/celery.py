@@ -18,7 +18,7 @@ app.conf.update(timezone = 'America/Guayaquil')
 app.config_from_object(settings, namespace='CELERY')
 app.conf.beat_schedule = {
     'task-periodic': {
-        'task': 'Aplicaciones.Gestion_Usuarios.tasks.task_periodic',
+        'task': 'Aplicaciones.Gestion_Usuarios.tasks.mul',
         'schedule': timedelta(seconds=30),  # Ejecutar cada 30 segundos
     },
    
