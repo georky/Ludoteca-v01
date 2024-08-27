@@ -40,9 +40,9 @@ def task_periodic(request,bind=True):
    fecha_actual = timezone.now()
     # Filtra los usuarios con campo3 igual a 'PENDIENTE' y obtén los valores de campo5
    usuarios_listados  = Clientes.objects.filter(campo3='PENDIENTE')
-   if not usuarios_listados.exists():
-        print("No hay usuarios pendientes. La tarea se detiene.")
-        return 
+   #if not usuarios_listados.exists():
+        #print("No hay usuarios pendientes. La tarea se detiene.")
+        #return 
     # Itera sobre las fechas obtenidas
     
    for usuario in usuarios_listados:
