@@ -1,14 +1,12 @@
-from urllib import request
+
 from celery import shared_task
 import http.client
 from django.shortcuts import redirect
 import request2
 import json
 import jsonify
-from django.contrib import messages
 from .models import Clientes
-from datetime import datetime, timezone,timedelta
-import pytz
+from datetime import datetime, timezone
 from django.utils import timezone
 @shared_task(bind=True)
 def test_func0(bind= True):
@@ -61,41 +59,61 @@ def task_periodic(request,bind=True):
         if fecha_termina <= fecha_actual:
             # Preparar el payload para enviar el mensaje a WhatsApp
             data = {
-                "messaging_product": "whatsapp",
-                "recipient_type": "individual",
-                "to": '593'+telefono,
-                "type": "text",
-                "text": {
-                    "preview_url": False,
-                    "body": mensaje
-                }
+            "messaging_product": "whatsapp",
+            "to": '593' + telefono,  # Asegúrate de que 'telefono' sea un string sin espacios
+            "type": "template",
+            "template": {
+                "name": "ludoteca_fin",
+                "language": {
+                    "code": "es_MX"
+                },
+                "components": [
+                    {
+                        "type": "header",
+                        "parameters": [
+                            {
+                                "type": "image",
+                                "image": {
+                                    "link": "https://i.postimg.cc/DZf9DMgn/ludoteca.png"  # Reemplaza con la URL de tu imagen
+                                }
+                            }
+                        ]
+                    }
+                ]
             }
+        }
 
-            # Convertir el diccionario a formato JSON
-            data_json = json.dumps(data)
+        #Convertir el diccionaria a formato JSON
+            data=json.dumps(data)
 
-            # Configurar los headers para la solicitud HTTP
             headers = {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer EAAOyRshDbC8BOz2bvkJI922HNuXYGgEUtknT4Ajhog5AUAIHg1XzWZCp1ywehhKTPE1mW1upmF8cW0G7Oc8iuza0VPimg7ZCkZBRatCAQakFnscP99o2vH3BPDZCACZAhNIIsblajrlDXszb8jsXilmM25yupCCbZB6rjapXZClvYePtveFPdqI15LTf0ZCFSSU6"
+                "Content-Type" : "application/json",
+                "Authorization" : "Bearer EAAOttkFM0QUBO0ggpCuImEjTDEZCED138rJbdUZBkJXcsobMbytbvU8B5PwpUMlVdmlD5d2ZB7SSQxskCCrVDCUVwyYgwA1AnUc4KkDB43WATGRAw6I4ZAqAm989rlFTNZAouLRKxiHpZCXt0QPCjUa5QsSHOgayyMVZCLs5V5BsSa3SMZAzvvZAQnttU1uT8jddu1QZDZD"
             }
 
-            # Realizar la conexión HTTPS con la API de WhatsApp de Facebook
+            connection = http.client.HTTPSConnection("graph.facebook.com")
+
             try:
-                connection = http.client.HTTPSConnection("graph.facebook.com")
-                connection.request("POST", "/v19.0/346378921896150/messages", data_json, headers)
-                
+
+
+                connection.request("POST","/v20.0/380727461797238/messages", data, headers)
                 response = connection.getresponse()
-                print(f"Mensaje enviado a {telefono}. Estado: {response.status}, Razón: {response.reason}")
-                estado = 'COMPLETADO'
-                usuario.campo3 = estado
-                usuario.save()
-                # Aquí puedes manejar la respuesta si es necesario
-                # Por ejemplo, verificar response.status para asegurarte de que el mensaje se haya enviado correctamente.
                 
+
+                print(response.status, response.reason)
+                
+                if response.status == 200:
+                    print(f"Mensaje enviado a {telefono}. Estado: {response.status}, Razón: {response.reason}")
+                    estado = 'ENVIADO'
+                    clientes = Clientes.objects.get(telefono=telefono)
+                    clientes.campo3 = estado
+                    clientes.save()
+                    #return redirect('inicio')
+                else:
+                    print("Error al enviar el mensaje")
+                # print(response.status_code, response.text)     
             except Exception as e:
                 print(f"Error al enviar mensaje a {telefono}: {str(e)}")
-                
             finally:
                 connection.close()
             
