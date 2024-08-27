@@ -39,7 +39,7 @@ def verificar_token(req):
 def task_periodic(request,bind=True):
    fecha_actual = timezone.now()
     # Filtra los usuarios con campo3 igual a 'PENDIENTE' y obtén los valores de campo5
-   usuarios_listados  = Clientes.objects.filter(campo3='PENDIENTE')
+   usuarios_listados  = Clientes.objects.all()
    #if not usuarios_listados.exists():
         #print("No hay usuarios pendientes. La tarea se detiene.")
         #return 
@@ -101,7 +101,7 @@ def task_periodic(request,bind=True):
                 
 
                 print(response.status, response.reason)
-                
+                print("holiss1")
                 if response.status == 200:
                     print(f"Mensaje enviado a {telefono}. Estado: {response.status}, Razón: {response.reason}")
                     estado = 'ENVIADO'
@@ -116,7 +116,7 @@ def task_periodic(request,bind=True):
                 print(f"Error al enviar mensaje a {telefono}: {str(e)}")
             finally:
                 connection.close()
-            
+            print("holiss2")
 def recibir_mensajes(req):
     try:
         req = request2.get_json()
