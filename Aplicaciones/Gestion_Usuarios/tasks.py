@@ -108,7 +108,8 @@ def task_periodic(request,bind=True):
                     clientes = Clientes.objects.get(telefono=telefono)
                     clientes.campo3 = estado
                     clientes.save()
-                    print(estado)
+                    print("mensajebbbb")
+                    print(clientes.campo3)
                     #return redirect('inicio')
                 else:
                     print("Error al enviar el mensaje")
