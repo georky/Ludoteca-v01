@@ -39,10 +39,10 @@ def verificar_token(req):
 def task_periodic(request,bind=True):
    fecha_actual = timezone.now()
     # Filtra los usuarios con campo3 igual a 'PENDIENTE' y obtén los valores de campo5
-   usuarios_listados  = Clientes.objects.filter(campo3='PENDIENTE')
-   if not usuarios_listados.exists():
-      print("No hay usuarios pendientes. La tarea se detiene.")
-      return 
+   usuarios_listados  = Clientes.objects.all()
+  #if not usuarios_listados.exists():
+     # print("No hay usuarios pendientes. La tarea se detiene.")
+      #return 
     # Itera sobre las fechas obtenidas
     
    for usuario in usuarios_listados:
@@ -101,13 +101,14 @@ def task_periodic(request,bind=True):
                 
 
                 print(response.status, response.reason)
-                print("holiss1")
+                
                 if response.status == 200:
                     print(f"Mensaje enviado a {telefono}. Estado: {response.status}, Razón: {response.reason}")
                     estado = 'ENVIADO'
                     clientes = Clientes.objects.get(telefono=telefono)
                     clientes.campo3 = estado
                     clientes.save()
+                    print(estado)
                     #return redirect('inicio')
                 else:
                     print("Error al enviar el mensaje")
