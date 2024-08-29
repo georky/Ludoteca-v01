@@ -5,6 +5,7 @@ from django.shortcuts import redirect
 import request2
 import json
 import jsonify
+import requests
 from .models import Clientes
 from datetime import datetime, timezone
 from django.utils import timezone
@@ -133,7 +134,7 @@ def recibir_mensajes(req):
 @shared_task
 def fetch_data_Worker():
     url = "https://api.render.com/deploy/srv-cr6j3qtds78s73bugcu0?key=mAFHyGrpLu8"
-    response = request2.get(url)
+    response = requests.get(url)
     if response.status_code == 200:
         # Procesa la respuesta
         data = response.json()  # Si la respuesta es JSON
@@ -145,7 +146,7 @@ def fetch_data_Worker():
 @shared_task
 def fetch_data_beat():
     url = "https://api.render.com/deploy/srv-cr6j7faj1k6c73d57a60?key=I1FE8d2FUO0"
-    response = request2.get(url)
+    response = requests.get(url)
     if response.status_code == 200:
         # Procesa la respuesta
         data = response.json()  # Si la respuesta es JSON
