@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-q+uk%otgznyl0eifxl_=$z3)__mnwjue(pw7#gi+zy%a&v&q0-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['ludoteca-v01.onrender.com']
 
 
 # Application definition
