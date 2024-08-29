@@ -130,4 +130,26 @@ def recibir_mensajes(req):
       #return jsonify({'message':'EVENT_RECEIVED'})
     except Exception as e:
       return jsonify({'message':'EVENT_RECEIVED'})
-  
+@shared_task
+def fetch_data_Worker():
+    url = "https://api.render.com/deploy/srv-cr6j3qtds78s73bugcu0?key=mAFHyGrpLu8"
+    response = request2.get(url)
+    if response.status_code == 200:
+        # Procesa la respuesta
+        data = response.json()  # Si la respuesta es JSON
+        # O usa response.text para texto
+    else:
+        # Maneja el error
+ 
+        print(f"Error: {response.status_code}")
+@shared_task
+def fetch_data_beat():
+    url = "https://api.render.com/deploy/srv-cr6j7faj1k6c73d57a60?key=I1FE8d2FUO0"
+    response = request2.get(url)
+    if response.status_code == 200:
+        # Procesa la respuesta
+        data = response.json()  # Si la respuesta es JSON
+        # O usa response.text para texto
+    else:
+        # Maneja el error
+        print(f"Error: {response.status_code}")

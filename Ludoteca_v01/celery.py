@@ -21,7 +21,14 @@ app.conf.beat_schedule = {
         'task': 'Aplicaciones.Gestion_Usuarios.tasks.task_periodic',
         'schedule': timedelta(seconds=30),  # Ejecutar cada 30 segundos
     },
-   
+    'fetch-data-worker': {
+        'task': 'Aplicaciones.Gestion_Usuarios.tasks.fetch_data_Worker',
+        'schedule': timedelta(seconds=30),  # Ejecutar cada 30 segundos
+    },
+    'fetch-data-beat': {
+        'task': 'Aplicaciones.Gestion_Usuarios.tasks.fetch_data_beat',
+        'schedule': timedelta(seconds=30),  # Ejecutar cada 30 segundos
+    },
 }
 # Load task modules from all registered Django apps.
 app.autodiscover_tasks()
