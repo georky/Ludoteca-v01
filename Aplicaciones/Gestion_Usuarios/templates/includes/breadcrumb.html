@@ -144,12 +144,12 @@
             <div class="card-body">
                 <form action="/registrarUsuarios/" method="POST">{% csrf_token %}
                     <div class="form-group">
-                        <input type="text" id="txtTelefono" name="txtTelefono" class="form-control" placeholder="Telefono"
+                        <input type="number" id="txtTelefono" name="txtTelefono" class="form-control" placeholder="Telefono"
                           minlength="9" maxlength="9"required value="">
                     </div>
                     <div class="form-group">
-                        <input type="text" id="txmensaje" name="txmensaje" class="form-control" placeholder="Mensaje"
-                            required>
+                        <input type="hidden" id="txmensaje" name="txmensaje" class="form-control" placeholder="Mensaje"
+                        value="GUARDADO">
                     </div>
                     <div class="form-group">
                         <input type="text" id="txNombreC" name="txNombreC" class="form-control" placeholder="Nombre Cliente"
@@ -160,8 +160,8 @@
                             maxlength="50" required>
                     </div>
                     <div class="form-group">
-                        <input type="text" id="numHoras" name="numHoras" class="form-control" min="1" max="12"
-                            value="1" required>
+                        <input type="number" id="numHoras" name="numHoras" class="form-control" min="2" max="1200"
+                            value="2" required>
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-success btn-block text-white">Guardar</button>
@@ -186,19 +186,30 @@
           <form id="form-editar">
             <div class="form-group">
               <label for="nombreR">Nombre Representante</label>
-              <input type="text" class="form-control" id="nombreR" name="nombreR">
+              <input type="text" class="form-control" id="nombreR" name="nombreR" required>
             </div>
             <div class="form-group">
               <label for="nombreC">Nombre Cliente</label>
-              <input type="text" class="form-control" id="nombreC" name="nombreC">
+              <input type="text" class="form-control" id="nombreC" name="nombreC" required>
             </div>
             <div class="form-group">
               <label for="campo3">Estado</label>
-              <input type="text" class="form-control" id="campo3" name="campo3">
+              
+              <select class="form-control" id="campo3" name="campo3" required>
+                <option id="campo3" name="campo3"value="ENVIADO">ENVIADO</option>
+                <option id="campo3" name="campo3"value="PENDIENTE">PENDIENTE</option>
+                <option id="campo3" name="campo3"value="CANCELAR">CANCELAR</option>
+                
+            </select>
+            
+            </div>
+            <div class="form-group">
+              <label for="telefono">Tiempo Minutos</label>
+              <input type="number" id="tiempoH" name="tiempoH" class="form-control" min="2" max="1200" required>
             </div>
             <div class="form-group">
               <label for="telefono">Telefono</label>
-              <input type="text" class="form-control" id="telefono" name="telefono">
+              <input type="text" class="form-control" id="telefono" name="telefono" readonly>
             </div>
             <input type="hidden" id="telefono">
             <button type="submit" class="label theme-bg text-white f-12">Guardar cambios</button>
@@ -256,14 +267,14 @@
             <p class="m-0">0${user.telefono}</p>
           </td>
           <td>
-            <h6 class="mb-1">${user.tiempoH} horas</h6>
+            <h6 class="mb-1">${user.tiempoH} Minutos</h6>
           </td>
           <td>
             <h6 class="mb-1">${user.campo6}</h6>
           </td>
           <td>
-            ${user.campo3 === 'PENDIENTE' ? 
-              `<h6 class="m-0 text-c-red">${user.campo3}</h6>` : 
+            ${user.campo3 != 'ENVIADO' ? 
+              `<h6 class="m-0 text-c-red">${user.campo3}</h6><p class="m-0">${user.campo5}</p>` : 
               `<h6 class="m-0 text-c-green">${user.campo3}</h6><p class="m-0">${user.campo5}</p>`
             }
           </td>
@@ -311,7 +322,8 @@
       $('#nombreC').val(data.nombreC);
       $('#telefono').val(data.telefono);
       $('#campo3').val(data.campo3);
-      $('#telefono-id').val(data.telefono); // Asegúrate de tener un campo oculto para el ID del usuario
+      $('#tiempoH').val(data.tiempoH);
+      $('#telefono-id').val(data.telefono); // Asegúrate de tener un campo oculto para el ID del usuario numHoras
       $('#editarModal').modal('show'); // Muestra el modal
     });
   });

@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-q+uk%otgznyl0eifxl_=$z3)__mnwjue(pw7#gi+zy%a&v&q0-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['ludoteca-v01.onrender.com']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -141,12 +141,12 @@ LOGIN_URL = '/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #CELERY SETTINGS
 
-CELERY_BROKER_URL ='redis://red-cqfb7qt6l47c73bbb7mg:6379/0'
+CELERY_BROKER_URL ='redis://localhost:6379/0'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'America/Guayaquil'
-CELERY_RESULT_BACKEND = 'redis://red-cqfb7qt6l47c73bbb7mg:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 
 #Celery Beat
 

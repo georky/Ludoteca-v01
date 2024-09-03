@@ -19,15 +19,7 @@ app.config_from_object(settings, namespace='CELERY')
 app.conf.beat_schedule = {
     'task-periodic': {
         'task': 'Aplicaciones.Gestion_Usuarios.tasks.task_periodic',
-        'schedule': timedelta(seconds=30),  # Ejecutar cada 30 segundos
-    },
-    'fetch-data-worker': {
-        'task': 'Aplicaciones.Gestion_Usuarios.tasks.fetch_data_Worker',
-        'schedule': timedelta(seconds=30),  # Ejecutar cada 30 segundos
-    },
-    'fetch-data-beat': {
-        'task': 'Aplicaciones.Gestion_Usuarios.tasks.fetch_data_beat',
-        'schedule': timedelta(seconds=30),  # Ejecutar cada 30 segundos
+        'schedule': timedelta(seconds=30),  # Ejecutar cada 30 segundo
     },
 }
 # Load task modules from all registered Django apps.

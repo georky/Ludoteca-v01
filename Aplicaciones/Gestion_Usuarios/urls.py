@@ -17,7 +17,6 @@ urlpatterns = [
     path('editarUsuario/', views.editarUsuario,name='editarUsuario'),
     path('eliminarUsuarios/<str:telefono>/', views.eliminarUsuarios, name='eliminarUsuarios'),
     path('enviarNotifi/<str:telefono>/<str:nombreC>/<str:mensaje>/', views.enviarNotifi,name='enviarNotifi'),
-    
     ]+ static(settings.STATIC_URL, document_root=settings.MEDIA_ROOT)
 
 

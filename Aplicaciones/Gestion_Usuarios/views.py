@@ -19,6 +19,8 @@ from django.db.models import Count
 from .forms import ClienteForm
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from .tasks import task_periodic
 # Token de verificacion para la configuracion
 TOKEN_ANDERCODE = "ANDERCODE"
 
@@ -99,11 +101,22 @@ def registrarUsuarios(request):
         nombreR = request.POST['txtNombreR']
         tiempoH = request.POST['numHoras']
         mensaje = request.POST['txmensaje']
+        # Validar que el número de teléfono no esté ya registrado
+        if Clientes.objects.filter(telefono=telefono).exists():
+            messages.error(request, 'Este número de teléfono ya está registrado.')
+            return redirect('inicio')
+        # Convertir tiempoH a un número entero
+        try:
+            tiempoH = int(tiempoH)
+        except ValueError:
+            messages.error(request, 'El valor de tiempoH debe ser un número entero.')
+            return redirect('inicio')
         
         local_tz = pytz.timezone('America/Guayaquil')
         fecha_actual = datetime.now(local_tz).strftime('%Y-%m-%d %H:%M:%S')
-        fecha_termina = datetime.now(local_tz) + timedelta(minutes=1)
+        fecha_termina = datetime.now(local_tz) + timedelta(minutes=tiempoH)
         fecha_termina_mas_una_hora_str = fecha_termina.strftime('%Y-%m-%d %H:%M:%S')
+        
         
         # Create new client
         Clientes.objects.create(
@@ -122,6 +135,7 @@ def obtener_clientess(request, telefono):
         'nombreC': cliente.nombreC,
         'nombreR': cliente.nombreR,
         'campo3': cliente.campo3,
+        'tiempoH': cliente.tiempoH,
     }
     return JsonResponse(data)    
 
@@ -133,10 +147,24 @@ def editarUsuario(request):
     nombreC = request.POST.get('nombreC')
     nombreR = request.POST.get('nombreR')
     campo3 = request.POST.get('campo3')
+    tiempoH = request.POST.get('tiempoH')
+    try:
+            tiempoH = int(tiempoH)
+    except ValueError:
+            messages.error(request, 'El valor de tiempoH debe ser un número entero.')
+            return redirect('registrarUsuarios')
+    
+    local_tz = pytz.timezone('America/Guayaquil')
+    fecha_actual = datetime.now(local_tz).strftime('%Y-%m-%d %H:%M:%S')
+    fecha_termina = datetime.now(local_tz) + timedelta(minutes=tiempoH)
+    fecha_termina_mas_una_hora_str = fecha_termina.strftime('%Y-%m-%d %H:%M:%S')
     cliente = Clientes.objects.get(telefono=telefono)
     cliente.nombreC = nombreC
     cliente.nombreR = nombreR
     cliente.campo3 = campo3
+    cliente.tiempoH = tiempoH
+    cliente.campo6 =fecha_actual
+    cliente.campo5 =fecha_termina_mas_una_hora_str
     cliente.save()
     return redirect('inicio')
        
@@ -250,3 +278,5 @@ def Nuser_list(request):
     }
     #return render(request, "includes/breadcrumb.html.html", context)
     return render(request, "gestionUsuarios.html", {"total_clients": context})
+
+
