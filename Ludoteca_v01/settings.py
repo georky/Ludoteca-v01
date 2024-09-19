@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-q+uk%otgznyl0eifxl_=$z3)__mnwjue(pw7#gi+zy%a&v&q0-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -84,17 +84,40 @@ WSGI_APPLICATION = 'Ludoteca_v01.wsgi.application'
       #  'NAME':  BASE_DIR / 'Ludoteca.db',
     #}
 #}
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'ludoteca',
-        'USER': 'ludoteca_user',
-        'PASSWORD': 'Y2k1N7xZ52oh2X7sTHb2cPoGT01ZlF8d',
-        'HOST': 'dpg-cr799dqj1k6c739ni1e0-a.oregon-postgres.render.com',
-        'PORT': '5432',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '3306',
+        'OPTIONS': {
+        'init_command': "SET sql_mode='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION'"
+      }
+       
     }
 }
+#DATABASES = {
+    #'default': {
+       # 'ENGINE': 'django.db.backends.mysql',
+        #'NAME': 'pprogram_ludoteca',
+        #'USER': 'pprogram_ludoteca',
+        #'PASSWORD': 'oUfg5fbL{kXv',
+        #'HOST': 'pprogramitas.com',
+        #'PORT': '3306',
+   # }
+#}
+#DATABASES = {
+    #'default': {
+      #  'ENGINE': 'django.db.backends.postgresql',
+       # 'NAME': 'ludoteca',
+       # 'USER': 'ludoteca_user',
+       # 'PASSWORD': 'Y2k1N7xZ52oh2X7sTHb2cPoGT01ZlF8d',
+        #'HOST': 'dpg-cr799dqj1k6c739ni1e0-a.oregon-postgres.render.com',
+       # 'PORT': '5432',
+    #}
+#}
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
